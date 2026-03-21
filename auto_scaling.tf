@@ -1,19 +1,3 @@
-# resource "aws_launch_configuration" "example" {
-#     image_id = var.ami_id
-#     instance_type = var.instance_type
-#     security_groups = [aws_security_group.instance.id]
-
-#     user_data = <<-EOF
-#                 #!/bin/bash
-#                 echo "Hello, World" > index.html
-#                 nohup busybox httpd -f -p ${var.server_port} &
-#                 EOF
-    
-#     # Required when using a launch configuration with an auto scaling group.
-#     lifecycle {
-#       create_before_destroy = true
-#     }
-# }
 
 resource "aws_launch_template" "example" {
   name_prefix   = "terraform-"
@@ -29,7 +13,7 @@ resource "aws_launch_template" "example" {
               EOF
   )
 
-# Required when using a launch configuration with an auto scaling group.
+  # Required when using a launch configuration with an auto scaling group.
   lifecycle {
     create_before_destroy = true
   }
@@ -37,7 +21,7 @@ resource "aws_launch_template" "example" {
 
 resource "aws_autoscaling_group" "example" {
   launch_template {
-    id = aws_launch_template.example.id
+    id      = aws_launch_template.example.id
     version = "$Latest"
   }
 
@@ -50,8 +34,8 @@ resource "aws_autoscaling_group" "example" {
   max_size = 5
 
   tag {
-    key = "Name"
-    value = "terraform-asg-example"
+    key                 = "Name"
+    value               = "terraform-asg-example"
     propagate_at_launch = true
   }
 }
