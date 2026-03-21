@@ -1,3 +1,32 @@
 .terraform
 *.tfstate
 *.tfstate.backup
+
+# Terraform state files - never commit these
+**/.terraform/
+**/*.tfstate
+**/*.tfstate.backup
+
+# Terraform lock file for providers - commit this
+!**/.terraform.lock.hcl
+
+# Crash logs
+crash.log
+crash.*.log
+
+# Sensitive variable files
+**/*.tfvars
+**/*.tfvars.json
+
+# Override files
+override.tf
+override.tf.json
+**/*_override.tf
+**/*_override.tf.json
+
+# Windows Zone.Identifier files from copying
+**/*:Zone.Identifier
+
+# CLI config
+.terraformrc
+terraform.rc

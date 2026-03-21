@@ -11,7 +11,7 @@ variable "instance_type" {
 }
 
 variable "aws_region" {
-  description = "region_to_Deploy_to"
+  description = "Region to deploy to"
   type        = string
   default     = "us-east-1"
 }
@@ -27,4 +27,3 @@ variable "app_name" {
   type        = string
   default     = "my_book_instance(Server)"
 }
-
