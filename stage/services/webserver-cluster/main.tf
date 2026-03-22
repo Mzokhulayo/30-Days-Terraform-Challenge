@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
     bucket         = "terraform-state-mzokhulayo"
-    key            = "stage/services/webserver-cluster/terraform.tfstate"
+    key            = "stage/data-stores/webserver-cluster/terraform.tfstate"
     region         = "us-east-2"
     dynamodb_table = "terraform-up-and-running-locks"
     encrypt        = true
@@ -9,49 +9,17 @@ terraform {
 }
 
 provider "aws" {
-  region = var.aws_region
+  region = "us-east-1"
 }
 
-resource "aws_security_group" "instance" {
-  name = var.app_name
+module "webserver_cluster" {
+  source = "../../../modules/services/webserver-cluster"
 
-  ingress {
-    from_port   = var.server_port
-    to_port     = var.server_port
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+  cluster_name = "webserver-stage"
+  db_remote_state_bucket = "terraform-state-mzokhulayo"
+  db_remote_state_key = "stage/data-stores/mysql/terraform.tfstate"
 
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
-
-data "aws_vpc" "default" {
-  default = true
-}
-
-data "aws_subnets" "default" {
-  filter {
-    name   = "vpc-id"
-    values = [data.aws_vpc.default.id]
-  }
-
-  filter {
-    name   = "availabilityZone"
-    values = ["us-east-1a", "us-east-1b", "us-east-1c", "us-east-1d", "us-east-1f"]
-  }
-}
-
-data  "terraform_remote_state"  "db" {
-  backend = "s3"
-
-  config = {
-    bucket = "terraform-state-mzokhulayo"
-    key = "stage/data-stores/mysql/terraform.tfstate"
-    region = "us-east-2"
-  }
+  instance_type = "t3.micro"
+  min_size = 2
+  max_size = 2
 }
