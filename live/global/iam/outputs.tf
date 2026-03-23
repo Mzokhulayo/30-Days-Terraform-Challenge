@@ -1,0 +1,22 @@
+# output "first_arn" {
+#   value = aws_iam_user.example[0].arn
+#   description = "The ARN for the first user"
+# }
+
+# output "all_iam_arns" {
+#   value = aws_iam_user.example[*].arn
+#   description = "The ARNs for all users"
+# }
+
+output "all_users" {
+  value = aws_iam_user.example
+}
+
+output "all_arns" {
+    value = values(aws_iam_user.example)[*].arn
+  
+}
+
+output "name" {
+  value = [for name in var.user_names: upper(name)] 
+}

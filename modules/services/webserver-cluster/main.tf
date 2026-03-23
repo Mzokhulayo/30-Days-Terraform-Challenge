@@ -1,12 +1,3 @@
-# terraform {
-#   backend "s3" {
-#     bucket         = "terraform-state-mzokhulayo"
-#     key            = "stage/services/webserver-cluster/terraform.tfstate"
-#     region         = "us-east-2"
-#     dynamodb_table = "terraform-up-and-running-locks"
-#     encrypt        = true
-#   }
-# }
 
 resource "aws_security_group" "instance" {
   name = "${var.cluster_name}-instance"
@@ -79,9 +70,7 @@ resource "aws_autoscaling_group" "example" {
     id      = aws_launch_template.example.id
     version = "$Latest"
   }
-
   vpc_zone_identifier = data.aws_subnets.default.ids
-
   target_group_arns = [aws_lb_target_group.asg.arn]
   health_check_type = "ELB"
 
@@ -100,6 +89,16 @@ resource "aws_autoscaling_group" "example" {
     value               = "terraform-asg-example"
     propagate_at_launch = true
   }
+
+  dynamic "tag" {
+    for_each = var.custom_tags
+
+    content {
+      key = tag.key
+      value = tag.value
+      propagate_at_launch = true
+    }
+}
 }
 
 
