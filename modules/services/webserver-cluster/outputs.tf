@@ -13,3 +13,8 @@ output "alb_security_group_id" {
   description = "The Id of the security Group attached to the load balancer"
 }
 
+output "instance_type" {
+  value       = var.instance_type
+  description = "The instance type used in the cluster"
+}
+

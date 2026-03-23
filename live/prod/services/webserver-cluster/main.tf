@@ -4,7 +4,7 @@ provider "aws" {
 }
 
 module "webserver_cluster" {
-  source = "../../../modules/services/webserver-cluster"
+  source = "github.com/Mzokhulayo/terraform-aws-webserver-cluster//services/webserver-cluster?ref=v0.0.1"
   cluster_name = "webserver-prod"
   db_remote_state_bucket = "terraform-state-mzokhulayo"
   db_remote_state_key = "prod/data-stores/mysql/terraform.tfstate"
