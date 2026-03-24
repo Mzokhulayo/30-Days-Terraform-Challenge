@@ -57,3 +57,20 @@ variable "custom_tags" {
   type = map(string)
   default = {}
 }
+
+variable "enable_autoscaling" {
+  description = "If set to tre, ebable auto scaling"
+  type = bool
+}
+
+variable "ami" {
+  description = "The AMI to run in the cluster"
+  type = string
+  default = "ami-0c02fb55956c7d316"
+}
+
+variable "server_text" {
+  description ="The text the webserver should return"
+  type  = string
+  default = "Hello, World: Welcome to my Web server By Mzokhulayo Mdubeki"
+}

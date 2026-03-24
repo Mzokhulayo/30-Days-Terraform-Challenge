@@ -13,7 +13,10 @@ provider "aws" {
 }
 
 module "webserver_cluster" {
-  source = "github.com/Mzokhulayo/terraform-aws-webserver-cluster//services/webserver-cluster?ref=v0.0.2"
+  source = "../../../../modules/services/webserver-cluster"
+
+  ami ="ami-0c02fb55956c7d316"
+  server_text = "New server Text"
 
   cluster_name = "webserver-stage"
   db_remote_state_bucket = "terraform-state-mzokhulayo"
@@ -22,4 +25,5 @@ module "webserver_cluster" {
   instance_type = "t3.micro"
   min_size = 2
   max_size = 2
+  enable_autoscaling = false
 }

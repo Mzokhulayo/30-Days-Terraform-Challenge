@@ -46,7 +46,7 @@ data  "terraform_remote_state"  "db" {
 ############### AUTO SCALING ##################################################
 resource "aws_launch_template" "example" {
   name_prefix   = "terraform-"
-  image_id      = var.ami_id
+  image_id      = var.ami
   instance_type = var.instance_type
 
   vpc_security_group_ids = [aws_security_group.instance.id]
@@ -66,6 +66,9 @@ resource "aws_launch_template" "example" {
 }
 
 resource "aws_autoscaling_group" "example" {
+  # Explicitly depend on the launch Template's name so each its replaced, This ASG is also replaced
+  name = "${var.cluster_name}-${aws_launch_template.example.name}"
+
   launch_template {
     id      = aws_launch_template.example.id
     version = "$Latest"
@@ -74,15 +77,24 @@ resource "aws_autoscaling_group" "example" {
   target_group_arns = [aws_lb_target_group.asg.arn]
   health_check_type = "ELB"
 
-  instance_refresh {
-    strategy = "Rolling"
-    preferences {
-      min_healthy_percentage = 50
-    }
-  }
+  # instance_refresh {
+  #   strategy = "Rolling"
+  #   preferences {
+  #     min_healthy_percentage = 50
+  #   }
+  # }
 
   min_size = var.min_size
   max_size = var.max_size
+
+  # wait for atleast this many instances to pass health checks before considering the ASG 
+  # deployment complete
+  min_elb_capacity = var.min_size
+
+  # when replacing this ASG, create the replacement 1st and only delete the original after
+  lifecycle {
+    create_before_destroy = true
+  }
 
   tag {
     key                 = "${var.cluster_name}-example"
@@ -91,7 +103,11 @@ resource "aws_autoscaling_group" "example" {
   }
 
   dynamic "tag" {
-    for_each = var.custom_tags
+    for_each = {
+      for key, value in var.var.custom_tags:
+      key => upper(value)
+      if key != "Name"
+    }
 
     content {
       key = tag.key
@@ -100,6 +116,35 @@ resource "aws_autoscaling_group" "example" {
     }
 }
 }
+
+resource "aws_autoscaling_schedule" "scale_out_during_business_hours" {
+  count = var.enable_autoscaling ? 1 : 0
+
+  scheduled_action_name = "${var.cluster_name}-scale-out-during-business-hours"
+  min_size = 2
+  max_size = 10
+  desired_capacity = 10
+  recurrence = "0 9 * * *"
+  autoscaling_group_name = aws_autoscaling_group.example.name
+}
+
+resource "aws_autoscaling_schedule" "scale_in_at_night" {
+  count = var.enable_autoscaling ? 1 : 0
+  scheduled_action_name = "${var.cluster_name}-scale-in-at-night"
+  min_size = 2
+  max_size = 10
+  desired_capacity = 2
+  recurrence = "0 17 * * *"
+  autoscaling_group_name = aws_autoscaling_group.example.name
+}
+
+
+
+
+
+
+
+
 
 
 ####################### Application Load Balancer ####################################
