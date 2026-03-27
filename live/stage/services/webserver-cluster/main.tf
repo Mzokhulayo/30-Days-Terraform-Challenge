@@ -9,14 +9,15 @@ terraform {
 }
 
 provider "aws" {
-  region = "us-east-1"
+  # region = "us-east-1"
+  region  ="us-east-1"
 }
 
 module "webserver_cluster" {
   source = "../../../../modules/services/webserver-cluster"
 
   ami ="ami-0c02fb55956c7d316"
-  server_text = "New server Text"
+  server_text = "Hello World v-1"
 
   cluster_name = "webserver-stage"
   db_remote_state_bucket = "terraform-state-mzokhulayo"

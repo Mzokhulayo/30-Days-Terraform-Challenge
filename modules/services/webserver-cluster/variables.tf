@@ -72,5 +72,5 @@ variable "ami" {
 variable "server_text" {
   description ="The text the webserver should return"
   type  = string
-  default = "Hello, World: Welcome to my Web server By Mzokhulayo Mdubeki"
+  default = "Hello, World"
 }

@@ -43,7 +43,7 @@ data  "terraform_remote_state"  "db" {
   }
 }
 
-############### AUTO SCALING ##################################################
+
 resource "aws_launch_template" "example" {
   name_prefix   = "terraform-"
   image_id      = var.ami
@@ -52,11 +52,13 @@ resource "aws_launch_template" "example" {
   vpc_security_group_ids = [aws_security_group.instance.id]
 
   # Render the User Data script as a template
+  update_default_version = true
 
   user_data = base64encode(templatefile( "${path.module}/user-data.sh", {
     server_port =var.server_port
     db_address  =data.terraform_remote_state.db.outputs.address
     db_port = data.terraform_remote_state.db.outputs.port
+    server_text = var.server_text
   }))
 
 # Required when using a launch configuration with an auto scaling group.
@@ -65,33 +67,41 @@ resource "aws_launch_template" "example" {
   }
 }
 
+resource "random_id" "server" {
+  keepers = {
+    # A new random ID is generated when the launch configuration changes
+    ami_id = var.ami
+  }
+  byte_length = 8
+}
+
 resource "aws_autoscaling_group" "example" {
-  # Explicitly depend on the launch Template's name so each its replaced, This ASG is also replaced
-  name = "${var.cluster_name}-${aws_launch_template.example.name}"
+
+  name_prefix          = "${var.cluster_name}-"
 
   launch_template {
     id      = aws_launch_template.example.id
     version = "$Latest"
   }
-  vpc_zone_identifier = data.aws_subnets.default.ids
-  target_group_arns = [aws_lb_target_group.asg.arn]
-  health_check_type = "ELB"
 
-  # instance_refresh {
-  #   strategy = "Rolling"
-  #   preferences {
-  #     min_healthy_percentage = 50
-  #   }
-  # }
+  vpc_zone_identifier = data.aws_subnets.default.ids
+  target_group_arns   = [aws_lb_target_group.asg.arn]
+  health_check_type   = "ELB"
 
   min_size = var.min_size
   max_size = var.max_size
 
-  # wait for atleast this many instances to pass health checks before considering the ASG 
-  # deployment complete
   min_elb_capacity = var.min_size
 
-  # when replacing this ASG, create the replacement 1st and only delete the original after
+  instance_refresh {
+    strategy = "Rolling"
+
+    preferences {
+      min_healthy_percentage = 50
+      instance_warmup        = 300
+    }
+  }
+
   lifecycle {
     create_before_destroy = true
   }
@@ -104,17 +114,17 @@ resource "aws_autoscaling_group" "example" {
 
   dynamic "tag" {
     for_each = {
-      for key, value in var.var.custom_tags:
+      for key, value in var.custom_tags:
       key => upper(value)
       if key != "Name"
     }
 
     content {
-      key = tag.key
-      value = tag.value
+      key                 = tag.key
+      value               = tag.value
       propagate_at_launch = true
     }
-}
+  }
 }
 
 resource "aws_autoscaling_schedule" "scale_out_during_business_hours" {
@@ -139,15 +149,7 @@ resource "aws_autoscaling_schedule" "scale_in_at_night" {
 }
 
 
-
-
-
-
-
-
-
-
-####################### Application Load Balancer ####################################
+####################### Application Load Balancer #################################### #
 resource "aws_alb" "example" {
   name               = "terraform-asg-example"
   load_balancer_type = "application"
@@ -222,7 +224,7 @@ resource "aws_lb_listener_rule" "asg" {
 
   condition {
     path_pattern {
-      values = ["*"]
+      values = ["/*"]
     }
   }
 
