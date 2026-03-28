@@ -2,7 +2,7 @@ terraform {
   backend "s3" {
     bucket         = "terraform-state-mzokhulayo"
     key            = "stage/data-stores/webserver-cluster/terraform.tfstate"
-    region         = "us-east-2"
+    region         = "us-east-1"
     dynamodb_table = "terraform-up-and-running-locks"
     encrypt        = true
   }
@@ -20,7 +20,7 @@ module "webserver_cluster" {
   server_text = "Hello World v-1"
 
   cluster_name = "webserver-stage"
-  db_remote_state_bucket = "terraform-state-mzokhulayo"
+  db_remote_state_bucket = "terraform-state-mzokhulayo-us-east-1"
   db_remote_state_key = "stage/data-stores/mysql/terraform.tfstate"
 
   instance_type = "t3.micro"

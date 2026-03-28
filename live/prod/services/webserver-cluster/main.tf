@@ -6,7 +6,7 @@ provider "aws" {
 module "webserver_cluster" {
   source = "../../../../modules/services/webserver-cluster"
   cluster_name = "webserver-prod"
-  db_remote_state_bucket = "terraform-state-mzokhulayo"
+  db_remote_state_bucket = "terraform-state-mzokhulayo-us-east-1"
   db_remote_state_key = "prod/data-stores/mysql/terraform.tfstate"
 
   instance_type = "t3.micro"  # can be set larger for production (eg M4.large) **free tier restrictions
