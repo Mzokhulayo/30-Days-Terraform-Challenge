@@ -39,11 +39,5 @@ module "webserver_cluster" {
   enable_autoscaling = false
   environment ="stage"
   
-  ########## to remove
-  custom_tags = {
-  TestTag = "manual-test-day17"
-}
-
-
 }
 
