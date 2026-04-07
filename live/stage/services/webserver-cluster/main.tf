@@ -5,13 +5,13 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~>5.0"
+      version = "~>6.0"
 
     }
   }
 
   backend "s3" {
-    bucket         = "terraform-state-mzokhulayo"
+    bucket         = "terraform-state-mzokhulayo-us-east-1"
     key            = "stage/data-stores/webserver-cluster/terraform.tfstate"
     region         = "us-east-1"
     dynamodb_table = "terraform-up-and-running-locks"
