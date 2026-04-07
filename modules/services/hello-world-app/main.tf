@@ -2,19 +2,18 @@ module "asg" {
   source = "../../cluster/asg-rolling-deploy"
 
   cluster_name = "Hello-world-${var.environment}"
-  ami = var.ami_id
+  ami = var.ami
   instance_type = var.instance_type
 
-  user_data = templatefile("${path.module}/user-data.sh", {
-    server_port = var.server_port
-    db_adress = data.terraform_remote_state.db.output.adress
-    db_port = data.terraform_remote_state.db.output.port
-    server_text = var.server_text
-  
-  })
+user_data = base64encode(templatefile("${path.module}/user-data.sh", {
+  server_port = var.server_port
+  db_address  = data.terraform_remote_state.db.outputs.stage_db_address
+  db_port     = data.terraform_remote_state.db.outputs.stage_db_port
+  server_text = var.server_text
+}))
 
   min_size = var.min_size
-  max_size = var.max_size
+  max_size = var.max_size 
   enable_autoscaling = var.enable_autoscaling
 
   subnet_ids = data.aws_subnets.default.ids

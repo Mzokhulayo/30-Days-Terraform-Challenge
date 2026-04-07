@@ -21,21 +21,15 @@ terraform {
 
 provider "aws" {
   region = "us-east-1"
-  alias  = "region_1"
 }
 
-# provider "aws" {
-#   region = "us-east-2"
-#   alias = "region_2"
-# }
-
 module "webserver_cluster" {
-  source = "../../../../modules/services/webserver-cluster"
+  source = "../../../../modules/services/hello-world-app"
 
   ami         = "ami-0c02fb55956c7d316"
   server_text = "Hello World v-1"
 
-  cluster_name           = "webserver-stage"
+  # cluster_name           = "webserver-stage"
   db_remote_state_bucket = "terraform-state-mzokhulayo-us-east-1"
   db_remote_state_key    = "stage/data-stores/mysql/terraform.tfstate"
 
@@ -43,4 +37,13 @@ module "webserver_cluster" {
   min_size           = 2
   max_size           = 2
   enable_autoscaling = false
+  environment ="stage"
+  
+  ########## to remove
+  custom_tags = {
+  TestTag = "manual-test-day17"
 }
+
+
+}
+
