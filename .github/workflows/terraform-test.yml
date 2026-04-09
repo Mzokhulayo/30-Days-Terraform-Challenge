@@ -20,11 +20,11 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-        working-directory: Day-18-Automated-tests/modules/cluster/asg-rolling-deploy
+        working-directory: modules/cluster/asg-rolling-deploy
 
       - name: Run Unit Tests
         run: terraform test
-        working-directory: Day-18-Automated-tests/modules/cluster/asg-rolling-deploy
+        working-directory: modules/cluster/asg-rolling-deploy
 
   integration-tests:
     name: Integration Tests
