@@ -27,14 +27,12 @@ module "Hello_world_app" {
   source = "../../../../modules/services/hello-world-app"
 
   ami         = "ami-0c02fb55956c7d316"
-  server_text = "Hello, World"
+  server_text = "Hello World V3"
 
   environment =var.environment
 
-  # db_remote_state_bucket = "terraform-state-mzokhulayo-us-east-1"
-  db_remote_state_bucket = var.db_remote_state_bucket
-  # db_remote_state_key    = "stage/data-stores/mysql/terraform.tfstate"
-  db_remote_state_key = var.db_remote_state_key
+  db_remote_state_bucket = "terraform-state-mzokhulayo-us-east-1"
+  db_remote_state_key    = "stage/data-stores/mysql/terraform.tfstate"
 
   instance_type      = "t3.micro"
   min_size           = 2
