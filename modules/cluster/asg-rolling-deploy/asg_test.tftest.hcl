@@ -1,4 +1,10 @@
-mock_provider "aws" {}
+mock_provider "aws" {
+  mock_data "aws_ec2_instance_type" {
+    defaults = {
+      free_tier_eligible = true
+    }
+  }
+}
 
 variables {
   cluster_name       = "test-cluster"
