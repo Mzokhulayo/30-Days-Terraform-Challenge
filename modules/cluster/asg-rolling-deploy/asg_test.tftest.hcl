@@ -1,6 +1,4 @@
-mock_provider "aws" {
-  alias = "mock"
-}
+mock_provider "aws" {}
 
 variables {
   cluster_name       = "test-cluster"
