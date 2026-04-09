@@ -11,11 +11,7 @@ terraform {
   }
 
   backend "s3" {
-    bucket         = "terraform-state-mzokhulayo-us-east-1"
-    key            = "stage/data-stores/mysql/terraform.tfstate"
-    region         = "us-east-1"
-    dynamodb_table = "terraform-up-and-running-locks"
-    encrypt        = true
+
   }
 }
 
@@ -37,9 +33,9 @@ data "aws_secretsmanager_secret_version" "db_credentials" {
 module "mysql_Stage_db" {
   source = "../../../../modules/data-stores/mysql"
 
-  db_name = "stage_db"
-  db_username = local.db_credentials.username
-  db_password = local.db_credentials.password
+  db_name = var.db_name
+  db_username = var.db_username
+  db_password = var.db_password
 
   backup_retention_period = 0
 }
