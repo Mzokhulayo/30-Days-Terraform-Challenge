@@ -17,7 +17,14 @@ terraform {
     dynamodb_table = "terraform-up-and-running-locks"
     encrypt        = true
   }
-}
+    # cloud {
+    # organization = "Mzokhulayo-Mdubeki"
+
+    # workspaces {
+    #   name = "webserver-cluster-stage"
+    # }
+  }
+
 
 provider "aws" {
   region = "us-east-1"
