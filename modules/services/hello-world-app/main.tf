@@ -1,23 +1,23 @@
 module "asg" {
   source = "../../cluster/asg-rolling-deploy"
 
-  cluster_name = "Hello-world-${var.environment}"
-  ami = var.ami
+  cluster_name  = "Hello-world-${var.environment}"
+  ami           = var.ami
   instance_type = var.instance_type
 
-user_data = base64encode(templatefile("${path.module}/user-data.sh", {
-  server_port = var.server_port
-  db_address  = data.terraform_remote_state.db.outputs.stage_db_address
-  db_port     = data.terraform_remote_state.db.outputs.stage_db_port
+  user_data = base64encode(templatefile("${path.module}/user-data.sh", {
+    server_port = var.server_port
+    db_address  = data.terraform_remote_state.db.outputs.stage_db_address
+    db_port     = data.terraform_remote_state.db.outputs.stage_db_port
 
-  server_text = var.server_text
-}))
+    server_text = var.server_text
+  }))
 
-  min_size = var.min_size
-  max_size = var.max_size 
+  min_size           = var.min_size
+  max_size           = var.max_size
   enable_autoscaling = var.enable_autoscaling
 
-  subnet_ids = data.aws_subnets.default.ids
+  subnet_ids        = data.aws_subnets.default.ids
   target_group_arns = [aws_lb_target_group.asg.arn]
   health_check_type = "ELB"
 
@@ -27,7 +27,7 @@ user_data = base64encode(templatefile("${path.module}/user-data.sh", {
 module "alb" {
   source = "../../networking/alb"
 
-  alb_name = "hello-world-${var.environment}"
+  alb_name   = "hello-world-${var.environment}"
   subnet_ids = data.aws_subnets.default.ids
 }
 

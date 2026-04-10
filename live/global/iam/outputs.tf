@@ -34,11 +34,11 @@ output "aws_region_2" {
 }
 
 output "instance_region_1_az" {
-  value = aws_instance.region_1.availability_zone
+  value       = aws_instance.region_1.availability_zone
   description = "The AZ where the instance in the 1st region id deployed"
 }
 
 output "instance_region_2_az" {
-  value = aws_instance.aws_region_2.availability_zone
+  value       = aws_instance.aws_region_2.availability_zone
   description = "The AZ where the instance in the 2nd region id deployed"
 }

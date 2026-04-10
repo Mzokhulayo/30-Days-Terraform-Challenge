@@ -23,17 +23,17 @@ resource "aws_launch_template" "example" {
   # Required when using a launch configuration with an auto scaling group.
   lifecycle {
     create_before_destroy = true
-     precondition {
+    precondition {
       condition     = data.aws_ec2_instance_type.instance.free_tier_eligible
       error_message = "${var.instance_type} is not part of the AWS Free Tier!"
     }
-    
+
   }
 }
 
 resource "aws_autoscaling_group" "example" {
 
-  name =var.cluster_name
+  name = var.cluster_name
 
   launch_template {
     id      = aws_launch_template.example.id
@@ -42,13 +42,13 @@ resource "aws_autoscaling_group" "example" {
   vpc_zone_identifier = var.subnet_ids
 
   # intergration with load balancer 
-  target_group_arns   = var.target_group_arns
-  health_check_type   = var.health_check_type
+  target_group_arns = var.target_group_arns
+  health_check_type = var.health_check_type
 
   min_size = var.min_size
   max_size = var.max_size
 
-# Use instance refresh to roll out changes to the ASG
+  # Use instance refresh to roll out changes to the ASG
   instance_refresh {
     strategy = "Rolling"
 
@@ -76,15 +76,15 @@ resource "aws_autoscaling_group" "example" {
       value               = tag.value
       propagate_at_launch = true
     }
-    
+
   }
   lifecycle {
     postcondition {
-      condition = length(self.availability_zones) > 1
+      condition     = length(self.availability_zones) > 1
       error_message = "You must use more than one AZ for high availability!"
     }
-      
-    }
+
+  }
 }
 
 
@@ -114,16 +114,16 @@ resource "aws_security_group" "instance" {
 }
 
 resource "aws_security_group_rule" "allow_http_inbound" {
-  type = "ingress"
+  type              = "ingress"
   security_group_id = aws_security_group.instance.id
 
-    from_port   = var.server_port
-    to_port     = var.server_port
-    protocol    = local.tcp_protocol
-    cidr_blocks = local.all_ips
-  }
+  from_port   = var.server_port
+  to_port     = var.server_port
+  protocol    = local.tcp_protocol
+  cidr_blocks = local.all_ips
+}
 
-  resource "aws_cloudwatch_metric_alarm" "high_cpu_utilization" {
+resource "aws_cloudwatch_metric_alarm" "high_cpu_utilization" {
   alarm_name  = "${var.cluster_name}-high-cpu-utilization"
   namespace   = "AWS/EC2"
   metric_name = "CPUUtilization"

@@ -36,10 +36,10 @@ data "aws_ami" "ubuntu_region_1" {
   provider = aws.region_1
 
   most_recent = true
-  owners = ["099720109477"]
+  owners      = ["099720109477"]
 
   filter {
-    name = "name"
+    name   = "name"
     values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
   }
 }
@@ -48,10 +48,10 @@ data "aws_ami" "ubuntu_region_2" {
   provider = aws.region_2
 
   most_recent = true
-  owners = ["099720109477"]
+  owners      = ["099720109477"]
 
   filter {
-    name = "name"
+    name   = "name"
     values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
   }
 }
@@ -59,14 +59,14 @@ data "aws_ami" "ubuntu_region_2" {
 resource "aws_instance" "region_1" {
   provider = aws.region_1
 
-  ami = data.aws_ami.ubuntu_region_1.id
+  ami           = data.aws_ami.ubuntu_region_1.id
   instance_type = "t3.micro"
 }
 
 resource "aws_instance" "aws_region_2" {
   provider = aws.region_2
 
-  ami = data.aws_ami.ubuntu_region_2.id
+  ami           = data.aws_ami.ubuntu_region_2.id
   instance_type = "t3.micro"
 }
 

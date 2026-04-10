@@ -17,13 +17,13 @@ terraform {
     dynamodb_table = "terraform-up-and-running-locks"
     encrypt        = true
   }
-    # cloud {
-    # organization = "Mzokhulayo-Mdubeki"
+  # cloud {
+  # organization = "Mzokhulayo-Mdubeki"
 
-    # workspaces {
-    #   name = "webserver-cluster-stage"
-    # }
-  }
+  # workspaces {
+  #   name = "webserver-cluster-stage"
+  # }
+}
 
 
 provider "aws" {
@@ -36,7 +36,7 @@ module "Hello_world_app" {
   ami         = "ami-0c02fb55956c7d316"
   server_text = "Hello World V3"
 
-  environment =var.environment
+  environment = var.environment
 
   db_remote_state_bucket = "terraform-state-mzokhulayo-us-east-1"
   db_remote_state_key    = "stage/data-stores/mysql/terraform.tfstate"
@@ -46,7 +46,7 @@ module "Hello_world_app" {
   max_size           = 2
   enable_autoscaling = false
   # ami = data.aws_ami.ubuntu.id
-  
-  
+
+
 }
 
