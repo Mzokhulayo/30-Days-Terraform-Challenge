@@ -1,26 +1,3 @@
-
-
-variable "aws_region" {
-  description = "Region to deploy to"
-  type        = string
-  default     = "us-east-1"
-}
-
-variable "ami_id" {
-  description = "AMI ID for the EC2 instance"
-  type        = string
-  default     = "ami-0c02fb55956c7d316"
-}
-
-variable "app_name" {
-  description = "Name tag applied to all resources"
-  type        = string
-  default     = "my_book_instance(Server)"
-}
-
-
-
-
 # ---------------------------------------------------------------------------------------------------------------------
 # REQUIRED PARAMETERS
 # You must provide a value for each of these parameters.
@@ -49,13 +26,11 @@ variable "enable_autoscaling" {
 variable "db_remote_state_bucket" {
   description = "The name of the S3 bucket used for the database's remote state storage"
   type        = string
-  default = null
 }
 
 variable "db_remote_state_key" {
   description = "The name of the key in the S3 bucket used for the database's remote state storage"
   type        = string
-  default = null
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -90,25 +65,4 @@ variable "custom_tags" {
   description = "Custom tags to set on the Instances in the ASG"
   type        = map(string)
   default     = {}
-}
-
-### Variables for dependencies
-
-variable "vpc_id" {
-description = "The ID of the VPC to deploy into"
-type = string
-default = null
-}
-variable "subnet_ids" {
-description = "The IDs of the subnets to deploy into"
-type = list(string)
-default = null
-}
-variable "mysql_config" {
-description = "The config for the MySQL DB"
-type = object({
-address = string
-port = number
-})
-default = null
 }
