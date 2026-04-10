@@ -39,7 +39,7 @@ data "aws_secretsmanager_secret_version" "db_credentials" {
 module "mysql_Stage_db" {
   source = "../../../../modules/data-stores/mysql"
 
-  db_name = var.db_name
+  db_name     = var.db_name
   db_username = var.db_username
   db_password = var.db_password
 

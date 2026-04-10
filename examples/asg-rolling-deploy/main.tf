@@ -14,37 +14,37 @@ provider "aws" {
 }
 
 module "asg" {
-    source = "../../modules/cluster/asg-rolling-deploy"
+  source = "../../modules/cluster/asg-rolling-deploy"
 
-    cluster_name = var.cluster_name
+  cluster_name = var.cluster_name
 
-    ami = data.aws_ami.ubuntu.id
-    instance_type = "t3.micro"
+  ami           = data.aws_ami.ubuntu.id
+  instance_type = "t3.micro"
 
-    min_size = 1
-    max_size = 1
-    enable_autoscaling = false
+  min_size           = 1
+  max_size           = 1
+  enable_autoscaling = false
 
-    subnet_ids = data.aws_subnets.default.ids
+  subnet_ids = data.aws_subnets.default.ids
 }
 
 data "aws_vpc" "default" {
-    default = true 
+  default = true
 }
 
 data "aws_subnets" "default" {
-    filter {
-      name = "vpc-id"
-      values = [data.aws_vpc.default.id]
-    }
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.default.id]
+  }
 }
 
 data "aws_ami" "ubuntu" {
   most_recent = true
-  owners = ["099720109477"]
+  owners      = ["099720109477"]
 
   filter {
-    name = "name"
+    name   = "name"
     values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
   }
 }

@@ -14,12 +14,12 @@ provider "aws" {
 }
 
 module "hello_world_app" {
-#   source = "../../../modules/services/hello-world-app"
-source = "../../../modules/services/hello-world-app"
+  #   source = "../../../modules/services/hello-world-app"
+  source = "../../../modules/services/hello-world-app"
 
   server_text = var.server_text
 
-  environment            = var.environment
+  environment = var.environment
 
   # Pass all the outputs from the mysql module straight through!
   mysql_config = var.mysql_config

@@ -22,17 +22,17 @@ terraform {
 
 provider "aws" {
   region = "us-east-1"
-  alias = "primary"
+  alias  = "primary"
 }
 
 provider "aws" {
   region = "us-west-1"
-  alias = "replica"
+  alias  = "replica"
 }
 
 data "aws_secretsmanager_secret" "db_credentials" {
   provider = aws.primary
-  name = "prod/stage/db/credentials"
+  name     = "prod/stage/db/credentials"
 }
 
 data "aws_secretsmanager_secret_version" "db_credentials" {
@@ -49,7 +49,7 @@ module "mysql_primary" {
     aws = aws.primary
   }
 
-  db_name = "prod_db"
+  db_name     = "prod_db"
   db_username = local.db_credentials.username
   db_password = local.db_credentials.password
 

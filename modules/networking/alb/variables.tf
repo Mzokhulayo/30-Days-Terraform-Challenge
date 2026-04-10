@@ -4,8 +4,8 @@
 # ---------------------------------------------------------------------------------------------------------------------
 
 variable "alb_name" {
-    description = "The name to use for this ALB"
-    type = string
+  description = "The name to use for this ALB"
+  type        = string
 }
 
 variable "subnet_ids" {
